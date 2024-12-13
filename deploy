@@ -1,0 +1,4 @@
+aws apigateway get-api-key --api-key xpvffv1d5l --include-value --query "value" --output text
+
+what do i do with this
+figure out how to automate putting this in contact.ts
