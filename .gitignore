@@ -39,4 +39,5 @@ next-env.d.ts
 .key
 cdk.context.json
 staticStack.out
+contactStack.out
 
