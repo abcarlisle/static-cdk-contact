@@ -1,0 +1,61 @@
+#!/bin/bash
+
+ROOT_DIR="/home/carlisle/projects/portfolio"
+
+# Function to display usage
+usage() {
+  echo "Usage: $0 [-k] [-b] [-d] [-q]"
+  echo "  -k    Get API Keys and store them"
+  echo "  -b    Build Website"
+  echo "  -d    Deploy Website"
+  echo "  -a    Do everything and deploy"
+  echo "  -q    Destroy Website"
+  exit 1
+}
+
+# Parse flags
+while getopts ":kbdqa" flag; do
+  case "${flag}" in
+    k)
+      echo "Getting API Keys"
+      ./getKey.sh
+      ;;
+    b)
+      echo "Building Portfolio"
+      cd ${ROOT_DIR}/portfolio
+      rm -r out/*
+      npm run build
+      ;;
+    d)
+      echo "Deploying Static Site from: ${ROOT_DIR}/cloud"
+      cd ${ROOT_DIR}/cloud
+      cdk deploy StaticStack -O ./staticStack.out --require-approval never
+      ;;
+    q)
+      echo "Destroying Static Site from: ${ROOT_DIR}/cloud"
+      cd ${ROOT_DIR}/cloud
+      cdk destroy --all
+      ;;
+    a)
+      echo "Getting API Keys"
+      ./getKey.sh
+      cd ${ROOT_DIR}/portfolio
+      rm -r out/*
+      echo "Building Portfolio"
+      npm run build
+      echo "Deploying Static Site from: ${ROOT_DIR}/cloud"
+      cd ${ROOT_DIR}/cloud
+      cdk deploy StaticStack -O ./staticStack.out --require-approval never
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+# If no flags were provided, show usage
+if [ $OPTIND -eq 1 ]; then
+  usage
+fi
+
+
