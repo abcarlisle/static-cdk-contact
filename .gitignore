@@ -5,6 +5,7 @@
 /cdk.out
 /.pnp
 .pnp.js
+*.out
 
 # testing
 /coverage
